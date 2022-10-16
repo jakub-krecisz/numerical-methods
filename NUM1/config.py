@@ -12,5 +12,5 @@ PRECISION = {
 }
 
 # File names
-FILE_PLOT = 'plot.png'
-FILE_TABLE = 'table.png'
+FILE_NAME_PLOT = 'plot.png'
+FILE_NAME_TABLE = r'table_{daType}.png'

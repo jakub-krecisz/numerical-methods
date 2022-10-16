@@ -3,11 +3,11 @@ DIR = $(notdir $(CURDIR))
 plot:
 	python3 main.py plot
 
-table:
-	python3 main.py table
+table_float:
+	python3 main.py table float32
 
-setup: requirements.txt
-	pip3 install -r requirements.txt
+table_double:
+	python3 main.py table double
 
 clean:
 	rm -rf __pycache__ *.png
