@@ -1,11 +1,11 @@
 """
----------------------------------------------------------------
-    The program analyzes the mismatch between derivative value
+----------------------------------------------------------------
+    The program analyzes the difference between derivative value
     computed between the discrete derivative and the exact
     derivative in given point
----------------------------------------------------------------
-    Autor: Jakub Krecisz                     Krakow, 27.04.2022
----------------------------------------------------------------
+----------------------------------------------------------------
+    Autor: Jakub Kręcisz                      Kraków, 16.10.2022
+----------------------------------------------------------------
 """
 
 import sys
@@ -13,8 +13,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from config import POINT, POINT_AMOUNT, PRECISION, \
-    FILE_NAME_PLOT, FILE_NAME_TABLE
+from config import *
 
 
 def rightApproximation(h):
@@ -32,9 +31,11 @@ def getDifference(function, hPoints):
 def drawPlot(plot, dataType):
     plot.grid(True)
     plot.set_title(f'Mismatch in {dataType} type')
-    hPoints = np.logspace(PRECISION[dataType], 0, num=POINT_AMOUNT, dtype=dataType)
+
+    hPoints = np.logspace(-PRECISION[dataType], 0, num=POINT_AMOUNT + 1, dtype=dataType)
     diffCentral = np.array(getDifference(centralApproximation, hPoints), dtype=dataType)
     diffRight = np.array(getDifference(rightApproximation, hPoints), dtype=dataType)
+
     plot.loglog(hPoints, diffCentral, 'tab:green')
     plot.loglog(hPoints, diffRight, 'tab:blue')
     plot.legend(['Central Derivative', 'Right Derivative'])
@@ -53,29 +54,24 @@ def generatePlots():
     plt.savefig(FILE_NAME_PLOT, dpi=200)
 
 
-def generateTable(dataType):
-    fig, ax = plt.subplots()
-    ax.axis('off')
-    ax.axis('tight')
+def printTable(dataType):
+    hPoints = np.logspace(-PRECISION[dataType], 0, num=POINT_AMOUNT + 1)
+    diffCentral = np.array(getDifference(centralApproximation, hPoints))
+    diffRight = np.array(getDifference(rightApproximation, hPoints))
 
-    hPoints = np.logspace(PRECISION[dataType], 0, num=POINT_AMOUNT+1, dtype=dataType)
-    diffCentral = np.array(getDifference(centralApproximation, hPoints), dtype=dataType)
-    diffRight = np.array(getDifference(rightApproximation, hPoints), dtype=dataType)
+    df = pd.DataFrame(data={'H': hPoints,
+                            'Central Derivative difference': diffCentral,
+                            'Right Derivative difference': diffRight})
 
-    table = pd.DataFrame(data={'H': hPoints,
-                               'Central Derivative difference': diffCentral,
-                               'Right Derivative difference': diffRight})
-
-    ax.table(cellText=table.values[::int((POINT_AMOUNT / 20))], colLabels=table.columns, loc='center')
-    fig.tight_layout()
-    plt.savefig(FILE_NAME_TABLE.format(daType=dataType))
+    with pd.option_context('display.float_format', lambda x: f'{x:,.{PRECISION[dataType]}f}'):
+        print(df[::int(NUM_OF_ROWS)])
 
 
 if __name__ == '__main__':
     if sys.argv[1] == 'plot':
         generatePlots()
     elif sys.argv[1] == 'table':
-        generateTable('float32' if sys.argv[2] == 'float32' else 'double')
+        printTable(sys.argv[2])
     else:
         print(f'Bad argument! - [plot/table] instead of: {sys.argv[1]}')
         sys.exit()

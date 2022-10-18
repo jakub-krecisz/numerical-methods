@@ -4,13 +4,16 @@ POINT = 0.2
 # Number of points in h range
 POINT_AMOUNT = 200
 
-# Precision for each data type
+# Number od printed rows; 20 = num of rows
+NUM_OF_ROWS = POINT_AMOUNT/20
+
+# Precision for each data type; number of digits after the decimal point
 PRECISION = {
-    'float32': -7,
-    'float64': -16,
-    'double': -16
+    'float32': 7,
+    'float64': 16,
+    'double': 16
 }
 
 # File names
 FILE_NAME_PLOT = 'plot.png'
-FILE_NAME_TABLE = r'table_{daType}.png'
+FILE_NAME_TABLE = r'table_{dataType}.png'
