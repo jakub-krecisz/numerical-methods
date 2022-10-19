@@ -51,7 +51,7 @@ def generatePlots():
 
     drawPlot(axs[0], 'float32')
     drawPlot(axs[1], 'double')
-    plt.savefig(FILE_NAME_PLOT, dpi=200)
+    plt.savefig(FILE_NAME_PLOT, dpi=300)
 
 
 def printTable(dataType):
