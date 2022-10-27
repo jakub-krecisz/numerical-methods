@@ -1,28 +1,33 @@
 import numpy as np
 
-from config import A1, A2, B
+from config import a1, a2, b, bPrim
+
+
+def solveMatrix(a, b):
+    return np.linalg.solve(a, b)
+
+
+def getNorm(matrix):
+    return np.linalg.norm(matrix)
+
+
+def getCondition(matrix):
+    return np.linalg.cond(matrix)
+
 
 if __name__ == '__main__':
-    Bp = B + np.array([10 ** -5, 0, 0, 0, 0]).transpose()
+    y1 = solveMatrix(a1, b)
+    y2 = solveMatrix(a2, b)
+    y1Prim = solveMatrix(a1, bPrim)
+    y2Prim = solveMatrix(a2, bPrim)
 
-    y1 = np.linalg.solve(A1, B)
-    y2 = np.linalg.solve(A2, B)
-    yp1 = np.linalg.solve(A1, Bp)
-    yp2 = np.linalg.solve(A2, Bp)
+    print(f"Solution for A\u2081y\u2081 = B:\n\ty\u2081 = {y1}\n")
+    print(f"Solution for A\u2081y\u2081' = B':\n\ty\u2081' = {y1Prim}\n")
+    print(f"Solution for A\u2082y\u2082 = B:\n\ty\u2082 = {y2}\n")
+    print(f"Solution for A\u2082y\u2082' = B':\n\ty\u2082' = {y2Prim}\n")
 
-    print("y1: ", np.linalg.solve(A1, B))
-    print("y2: ", np.linalg.solve(A2, B))
+    print("Δ\u2081 = ||y\u2081 - y\u2081'||\u2082\n\t Δ\u2081 = {:.20f}\n".format(getNorm(y1 - y1Prim)))
+    print("Δ\u2082 = ||y\u2082 - y\u2082'||\u2082\n\t Δ\u2082 = {:.20f}\n".format(getNorm(y2 - y2Prim)))
 
-    print("y'1: ", np.linalg.solve(A1, Bp))
-    print("y'2: ", np.linalg.solve(A2, Bp))
-
-    d1 = np.linalg.norm(y1 - yp1)
-    d2 = np.linalg.norm(y2 - yp2)
-
-    print("delta1: {:.20f}".format(d1))
-    print("delta2: {:.20f}".format(d2))
-    print('\n')
-
-    # Dodatkowy kod do wniosku
-    print("Wspolczynnik uwarunkowania macierzy A1: ", np.linalg.cond(A1))
-    print("Wspolczynnik uwarunkowania macierzy A2: ", np.linalg.cond(A2))
+    print("cond(A\u2081) = {:.20f}\n".format(getCondition(a1)))
+    print("cond(A\u2082) = {:.20f}\n".format(getCondition(a2)))
