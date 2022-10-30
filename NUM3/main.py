@@ -67,4 +67,3 @@ print("Wyznacznik macierzy A = ", wyznacznik)
 # Testy
 print("Czas programu to: {:.20f}".format(end))
 checkNumpy()
-
