@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 
 def get_solution_by_numpy_lib(size):
     aMatrix = np.ones((size, size))
-    aMatrix += np.diag([10] * size)
-    aMatrix += np.diag([8] * (size - 1), 1)
+    aMatrix += np.diag([9] * size)
+    aMatrix += np.diag([7] * (size - 1), 1)
     bMatrix = np.array([5] * size).transpose()
 
     startTimeTime = time.time()
@@ -47,8 +47,8 @@ def generate_graph():
     plt.grid(True)
     plt.yscale('log')
     plt.title('Solving time')
-    plt.xlabel('Matrix dimension')
-    plt.ylabel('μs')
+    plt.xlabel('Matrix dimension (N)')
+    plt.ylabel('Microseconds (μs)')
     plt.plot(numpyResults.keys(), numpyResults.values(), 'tab:green')
     plt.plot(numpyResults.keys(), algorythmResults.values(), 'tab:red')
     plt.legend(['Solving time by numPy library', 'Solving time by algorythm'])

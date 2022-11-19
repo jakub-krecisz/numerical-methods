@@ -1,5 +1,5 @@
 from functools import reduce
-import numpy as np
+import numpy as np  # Tylko do sprawdzania wyników
 import time
 
 
@@ -65,5 +65,5 @@ print()
 print("Wyznacznik macierzy A = ", wyznacznik)
 
 # Testy
-print("Czas programu to: {:.20f}".format(end))
-checkNumpy()
+# print("Czas programu to: {:.20f}".format(end))
+# checkNumpy()
