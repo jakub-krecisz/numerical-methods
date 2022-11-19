@@ -40,7 +40,7 @@ def generate_graph():
     numpyResults = {}
     algorythmResults = {}
 
-    for size in range(100, 10000, 200):
+    for size in range(100, 20000, 200):
         numpyResults[size] = get_solution_by_numpy_lib(size)[0] * 1000000
         algorythmResults[size] = get_solution_by_sherman_morrison(size)[0] * 1000000
 

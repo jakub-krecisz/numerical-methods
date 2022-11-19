@@ -1,69 +1,79 @@
-from functools import reduce
-import numpy as np  # Tylko do sprawdzania wyników
+import matplotlib.pyplot as plt
+import numpy as np
 import time
 
 
-# Testy
-def checkNumpy():
-    A = np.diag([0.2] * (n - 1), -1)
-    A += np.diag([1.2] * n)
-    A += np.diag([0.1 / i for i in range(1, n)], 1)
-    A += np.diag([0.4 / i ** 2 for i in range(1, n - 1)], 2)
-    x = list(range(1, n + 1))
+def get_solution_by_numpy_lib(size):
+    aMatrix = np.diag([0.2] * (size - 1), -1)
+    aMatrix += np.diag([1.2] * size)
+    aMatrix += np.diag([0.1 / i for i in range(1, size)], 1)
+    aMatrix += np.diag([0.4 / i ** 2 for i in range(1, size - 1)], 2)
+    xVector = np.array([_ for _ in range(1, size + 1)])
 
-    start = time.time()
+    startTime = time.time()
+    solution = np.linalg.solve(aMatrix, xVector)
 
-    np.linalg.solve(A, x)
-
-    print("Czas numpy to: {:.20f}".format(time.time() - start))
+    return solution, time.time() - startTime
 
 
-n = 100
+def get_solution_numerically(size):
+    aMatrix = [[0] + [0.2] * (size - 1), [1.2] * size, [0.1 / i for i in range(1, size)] + [0],
+               [0.4 / i ** 2 for i in range(1, size - 1)] + [0] + [0]]
 
-# Uzupełnienie diagonali macierzy A
-matrix = []
-matrix.append([0] + [0.2] * (n - 1))
-matrix.append([1.2] * n)
-matrix.append([0.1 / i for i in range(1, n)] + [0])
-matrix.append([0.4 / i ** 2 for i in range(1, n - 1)] + [0] + [0])
+    xVector = [_ for _ in range(1, size + 1)]
 
-# Stworzenie wektora wyrazów wolnych
-x = list(range(1, n + 1))
+    startTime = time.time()
+    for i in range(1, size - 2):
+        aMatrix[0][i] = aMatrix[0][i] / aMatrix[1][i - 1]
+        aMatrix[1][i] = aMatrix[1][i] - aMatrix[0][i] * aMatrix[2][i - 1]
+        aMatrix[2][i] = aMatrix[2][i] - aMatrix[0][i] * aMatrix[3][i - 1]
 
-start = time.time()
+    aMatrix[0][size - 2] = aMatrix[0][size - 2] / aMatrix[1][size - 3]
+    aMatrix[1][size - 2] = aMatrix[1][size - 2] - aMatrix[0][size - 2] * aMatrix[2][size - 3]
+    aMatrix[2][size - 2] = aMatrix[2][size - 2] - aMatrix[0][size - 2] * aMatrix[3][size - 3]
 
-# Rozkład LU
-for i in range(1, n - 2):
-    matrix[0][i] = matrix[0][i] / matrix[1][i - 1]
-    matrix[1][i] = matrix[1][i] - matrix[0][i] * matrix[2][i - 1]
-    matrix[2][i] = matrix[2][i] - matrix[0][i] * matrix[3][i - 1]
+    aMatrix[0][size - 1] = aMatrix[0][size - 1] / aMatrix[1][size - 2]
+    aMatrix[1][size - 1] = aMatrix[1][size - 1] - aMatrix[0][size - 1] * aMatrix[2][size - 2]
 
-matrix[0][n - 2] = matrix[0][n - 2] / matrix[1][n - 3]
-matrix[1][n - 2] = matrix[1][n - 2] - matrix[0][n - 2] * matrix[2][n - 3]
-matrix[2][n - 2] = matrix[2][n - 2] - matrix[0][n - 2] * matrix[3][n - 3]
+    # Forward Substitution
+    for i in range(1, size):
+        xVector[i] = xVector[i] - aMatrix[0][i] * xVector[i - 1]
 
-matrix[0][n - 1] = matrix[0][n - 1] / matrix[1][n - 2]
-matrix[1][n - 1] = matrix[1][n - 1] - matrix[0][n - 1] * matrix[2][n - 2]
+    # Backward Substitution
+    xVector[size - 1] = xVector[size - 1] / aMatrix[1][size - 1]
+    xVector[size - 2] = (xVector[size - 2] - aMatrix[2][size - 2] * xVector[size - 1]) / aMatrix[1][size - 2]
+    for i in range(size - 3, -1, -1):
+        xVector[i] = (xVector[i] - aMatrix[3][i] * xVector[i + 2] - aMatrix[2][i] * xVector[i + 1]) / aMatrix[1][i]
 
-# Podstawianie w przód
-for i in range(1, n):
-    x[i] = x[i] - matrix[0][i] * x[i - 1]
+    # Determinant
+    detA = 1
+    for val in aMatrix[1]:
+        detA *= val
 
-# Podstawiania w tył
-x[n - 1] = x[n - 1] / matrix[1][n - 1]
-x[n - 2] = (x[n - 2] - matrix[2][n - 2] * x[n - 1]) / matrix[1][n - 2]
+    return xVector, detA, time.time() - startTime
 
-for i in range(n - 3, -1, -1):
-    x[i] = (x[i] - matrix[3][i] * x[i + 2] - matrix[2][i] * x[i + 1]) / matrix[1][i]
 
-# Obliczanie wartości wyznacznika macierzy
-wyznacznik = reduce(lambda a, b: a * b, matrix[1])
-end = time.time() - start
+def generate_graph():
+    numpyResults = {}
+    numericalResults = {}
 
-print("Szukane rozwiązanie to: ", x)
-print()
-print("Wyznacznik macierzy A = ", wyznacznik)
+    for size in range(100, 5000, 200):
+        numpyResults[size] = get_solution_by_numpy_lib(size)[1] * 1000000
+        numericalResults[size] = get_solution_numerically(size)[2] * 1000000
 
-# Testy
-# print("Czas programu to: {:.20f}".format(end))
-# checkNumpy()
+    plt.grid(True)
+    plt.yscale('log')
+    plt.title('Computing time')
+    plt.xlabel('Matrix dimension (N)')
+    plt.ylabel('Microseconds (μs)')
+    plt.plot(numpyResults.keys(), numpyResults.values(), 'tab:green')
+    plt.plot(numpyResults.keys(), numericalResults.values(), 'tab:red')
+    plt.legend(['Solving time by numPy library', 'Solving time numerically'])
+    plt.show()
+
+
+if __name__ == '__main__':
+    n = 100
+    print(f'The solution of the equation for N = {n}:\n{get_solution_numerically(n)[0]}\n'
+          f'The determinant of A is equal: det(A) = {get_solution_numerically(n)[1]}')
+    generate_graph()
