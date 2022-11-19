@@ -1,5 +1,5 @@
 from functools import reduce
-import numpy as np  # Tylko do sprawdzania wyników
+import numpy as np
 import time
 
 
