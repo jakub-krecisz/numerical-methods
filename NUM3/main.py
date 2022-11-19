@@ -57,7 +57,7 @@ def generate_graph():
     numpyResults = {}
     numericalResults = {}
 
-    for size in range(100, 5000, 200):
+    for size in range(100, 10000, 200):
         numpyResults[size] = get_solution_by_numpy_lib(size)[1] * 1000000
         numericalResults[size] = get_solution_numerically(size)[2] * 1000000
 
