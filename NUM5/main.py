@@ -41,10 +41,10 @@ def solve_by_jacobin_method(xVector: list, bVector: list, size: int, max_iterati
         iterativeApprox.append(xVector.copy())
 
         # convergence check
-        if abs(previousNorm - actualNorm) < 10 ** PRECISION:
-            break
-        else:
+        if abs(previousNorm - actualNorm) > 10 ** PRECISION:
             previousNorm = actualNorm
+        else:
+            break
 
     return iterativeApprox
 
@@ -86,10 +86,10 @@ def solve_by_gauss_seidel_method(xVector: list, bVector: list, size: int, max_it
         iterativeApprox.append(xVector.copy())
 
         # convergence check
-        if abs(previousNorm - actualNorm) < 10 ** PRECISION:
-            break
-        else:
+        if abs(previousNorm - actualNorm) > 10 ** PRECISION:
             previousNorm = actualNorm
+        else:
+            break
 
     return iterativeApprox
 
