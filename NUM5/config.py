@@ -8,8 +8,7 @@ B_VECTOR = [x for x in range(1, N + 1)]
 
 # Example x vectors
 X_VECTOR = {'random': random.sample(range(1, 500), N),
-            'zeros': [0 for _ in range(N)],
-            'tens': [10 for _ in range(N)]}
+            'zeros': [0 for _ in range(N)]}
 
 # Max number of iteration at which algorythm will finish
 MAX_NUM_OF_ITERATIONS = 500
