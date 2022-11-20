@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from config import N, B_VECTOR, X_VECTOR, MAX_NUM_OF_ITERATIONS, PRECISION
 
 
-def solve_by_jacobin_method(xVector: list, bVector: list, size: int, max_iterations: int) -> list:
+def solve_by_jacobin_method(xVector: list, bVector: list, size: int, maxIterations: int) -> list:
     """
     The function determines the solution of our given equation to the
     specified precision of the results or to the maximum number of iterations by Jacobin method.
@@ -12,12 +12,12 @@ def solve_by_jacobin_method(xVector: list, bVector: list, size: int, max_iterati
     :param xVector: our vector x with example values
     :param bVector: our b vector from the equation
     :param size: our matrix dimension
-    :param max_iterations: maximum number of iterations
+    :param maxIterations: maximum number of iterations
     :return: list of approximations for all iterations
     """
     iterativeApprox = []
     previousNorm = 0
-    for _ in range(max_iterations):
+    for _ in range(maxIterations):
         copyOfxVector = xVector.copy()
         for index in range(size):
             if index == 0:
@@ -49,7 +49,7 @@ def solve_by_jacobin_method(xVector: list, bVector: list, size: int, max_iterati
     return iterativeApprox
 
 
-def solve_by_gauss_seidel_method(xVector: list, bVector: list, size: int, max_iterations: int) -> list:
+def solve_by_gauss_seidel_method(xVector: list, bVector: list, size: int, maxIterations: int) -> list:
     """
     The function determines the solution of our given equation to the
     specified precision of the results or to the maximum number of iterations by Gauss-Seidel method.
@@ -57,12 +57,12 @@ def solve_by_gauss_seidel_method(xVector: list, bVector: list, size: int, max_it
     :param xVector: our vector x with example values
     :param bVector: our b vector from the equation
     :param size: our matrix dimension
-    :param max_iterations: maximum number of iterations
+    :param maxIterations: maximum number of iterations
     :return: list of approximations for all iterations
     """
     iterativeApprox = []
     previousNorm = 0
-    for _ in range(max_iterations):
+    for _ in range(maxIterations):
         copyOfxVector = xVector.copy()
         for index in range(size):
             if index == 0:
