@@ -68,11 +68,11 @@ def solve_by_gauss_seidel_method(xVector: list, bVector: list, size: int, max_it
             if index == 0:
                 xVector[index] = (bVector[index] - xVector[index + 1] - 0.2 * xVector[index + 2]) / 3
             elif index == 1:
-                xVector[index] = (bVector[index] - xVector[index - 1] - xVector[index + 1] - 0.2 * xVector[
-                    index + 2]) / 3
+                xVector[index] = (bVector[index] - xVector[index - 1] - xVector[index + 1] - 0.2 *
+                                  xVector[index + 2]) / 3
             elif index == size - 2:
-                xVector[index] = (bVector[index] - xVector[index - 1] - 0.2 * xVector[index - 2] - xVector[
-                    index + 1]) / 3
+                xVector[index] = (bVector[index] - xVector[index - 1] - 0.2 * xVector[index - 2] -
+                                  xVector[index + 1]) / 3
             elif index == size - 1:
                 xVector[index] = (bVector[index] - xVector[index - 1] - 0.2 * xVector[index - 2]) / 3
             else:
