@@ -1,106 +1,105 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import copy
-import random
+
+from config import N, B_VECTOR, X_VECTOR, MAX_NUM_OF_ITERATIONS, PRECISION
 
 
-# Imlementacja metody Jacobiego
-def jacobi(x, stop):
-    err = []
-    norm1 = 0
-    while stop:
-        y = x.copy()
-        for i in range(n):
-            if i == 0:
-                x[i] = (b[i] - x[i + 1] - 0.2 * x[i + 2]) / 3
-            elif i == 1:
-                x[i] = (b[i] - y[i - 1] - x[i + 1] - 0.2 * x[i + 2]) / 3
-            elif i == n - 2:
-                x[i] = (b[i] - y[i - 1] - 0.2 * y[i - 2] - x[i + 1]) / 3
-            elif i == n - 1:
-                x[i] = (b[i] - y[i - 1] - 0.2 * y[i - 2]) / 3
+def solve_by_jacobian_method(xVector, max_iterations, size, bVector):
+    iterativeApprox = []
+    previousNorm = 0
+    for _ in range(max_iterations):
+        copyOfxVector = xVector.copy()
+        for index in range(size):
+            if index == 0:
+                xVector[index] = (bVector[index] - xVector[index + 1] - 0.2 * xVector[index + 2]) / 3
+            elif index == 1:
+                xVector[index] = (bVector[index] - copyOfxVector[index - 1] - xVector[index + 1] - 0.2 * xVector[
+                    index + 2]) / 3
+            elif index == size - 2:
+                xVector[index] = (bVector[index] - copyOfxVector[index - 1] - 0.2 * copyOfxVector[index - 2] - xVector[
+                    index + 1]) / 3
+            elif index == size - 1:
+                xVector[index] = (bVector[index] - copyOfxVector[index - 1] - 0.2 * copyOfxVector[index - 2]) / 3
             else:
-                x[i] = (b[i] - y[i - 1] - 0.2 * y[i - 2] - x[i + 1] - 0.2 * x[i + 2]) / 3
-        norm2 = np.sqrt(sum(map(lambda a, b: (a - b) ** 2, x, y)))
-        err.append(copy.deepcopy(x))
+                xVector[index] = (bVector[index] - copyOfxVector[index - 1] - 0.2 * copyOfxVector[index - 2] - xVector[
+                    index + 1] - 0.2 * xVector[index + 2]) / 3
+        actualNorm = np.sqrt(sum(map(lambda a, b: (a - b) ** 2, xVector, copyOfxVector)))
+
+        iterativeApprox.append(xVector.copy())
 
         # Sprawdzenie czy zbiegło
-        if abs(norm1 - norm2) < 10 ** (-12):
+        if abs(previousNorm - actualNorm) < 10 ** (-12):
             break
-        norm1 = norm2
-        stop = stop - 1
+        previousNorm = actualNorm
 
-    print("Wynik otrzymany metodą Jacobiego:")
-    print(x)
-    print()
-    return err
+    return iterativeApprox.pop(), xVector
 
 
-# Implementacja metody Gaussa-Seidela
-def gauss(x, stop):
-    err = []
-    norm1 = 0
-    while stop:
-        y = x.copy()
-        for i in range(n):
-
-            if i == 0:
-                x[i] = (b[i] - x[i + 1] - 0.2 * x[i + 2]) / 3
-            elif i == 1:
-                x[i] = (b[i] - x[i - 1] - x[i + 1] - 0.2 * x[i + 2]) / 3
-            elif i == n - 2:
-                x[i] = (b[i] - x[i - 1] - 0.2 * x[i - 2] - x[i + 1]) / 3
-            elif i == n - 1:
-                x[i] = (b[i] - x[i - 1] - 0.2 * x[i - 2]) / 3
+def solve_by_gauss_seidel_method(xVector, max_iterations, size, bVector):
+    iterativeApprox = []
+    previousNorm = 0
+    for _ in range(max_iterations):
+        copyOfxVector = xVector.copy()
+        for index in range(size):
+            if index == 0:
+                xVector[index] = (bVector[index] - xVector[index + 1] - 0.2 * xVector[index + 2]) / 3
+            elif index == 1:
+                xVector[index] = (bVector[index] - xVector[index - 1] - xVector[index + 1] - 0.2 * xVector[
+                    index + 2]) / 3
+            elif index == size - 2:
+                xVector[index] = (bVector[index] - xVector[index - 1] - 0.2 * xVector[index - 2] - xVector[
+                    index + 1]) / 3
+            elif index == size - 1:
+                xVector[index] = (bVector[index] - xVector[index - 1] - 0.2 * xVector[index - 2]) / 3
             else:
-                x[i] = (b[i] - x[i - 1] - 0.2 * x[i - 2] - x[i + 1] - 0.2 * x[i + 2]) / 3
+                xVector[index] = (bVector[index] - xVector[index - 1] - 0.2 * xVector[index - 2] - xVector[
+                    index + 1] - 0.2 * xVector[index + 2]) / 3
 
-        norm2 = np.sqrt(sum(map(lambda a, b: (a - b) ** 2, x, y)))
-        err.append(copy.deepcopy(x))
+        actualNorm = np.sqrt(sum(map(lambda a, b: (a - b) ** 2, xVector, copyOfxVector)))
+
+        iterativeApprox.append(xVector.copy())
 
         # Sprawdzenie czy zbiegło
-        if abs(norm1 - norm2) < 10 ** (-16):
+        if abs(previousNorm - actualNorm) < 10 ** PRECISION:
             break
-        norm1 = norm2
-        stop = stop - 1
 
-    print("Wynik otrzymany metodą Gaussa-Seidela:")
-    print(x)
-    print()
-    return err
+        previousNorm = actualNorm
+
+    return iterativeApprox.pop(), xVector
 
 
-def generate_graph(w1, w2):
-    # Tworzenie wykresu
+def generate_graph(firstDiffs, secondDiffs, title):
     plt.grid(True)
     plt.xlabel('n')
-    plt.ylabel("$|x(n) - x(ostatni)|$")
+    plt.ylabel("$|x(n) - x[-1]|$")
     plt.yscale('log')
-    plt.plot([i for i in range(1, len(w1) + 1)], w1)
-    plt.plot([i for i in range(1, len(w2) + 1)], w2)
-    plt.legend(['Metoda Jacobiego', 'Metoda Gaussa-Seidela'])
-    plt.title('Porównanie metod iteracyjnych, start w losowym wektorze x')
+    plt.plot(list(range(1, len(firstDiffs) + 1)), firstDiffs, 'tab:green')
+    plt.plot(list(range(1, len(secondDiffs) + 1)), secondDiffs, 'tab:red')
+    plt.legend(['Jacobian Method', 'Gauss-Seidel method'])
+    plt.title(f'Comparison iterative methods; x with all {title} values')
     plt.show()
 
 
 if __name__ == '__main__':
-    n = 100
-    stop = 10000
-    x = random.sample(range(500), 100)
-    b = list(range(1, n + 1))
+    for key, xValues in X_VECTOR.items():
+        iterativeApproxJacobi, solutionJacobi = solve_by_jacobian_method(xValues.copy(),
+                                                                         MAX_NUM_OF_ITERATIONS, N,
+                                                                         B_VECTOR)
+        iterativeApproxGaussSeidel, solutionGaussSeidel = solve_by_gauss_seidel_method(xValues.copy(),
+                                                                                       MAX_NUM_OF_ITERATIONS, N,
+                                                                                       B_VECTOR)
 
-    err1 = jacobi(x.copy(), stop)
-    err2 = gauss(x.copy(), stop)
+        print(f'Solution by Jacobi method:\n{solutionJacobi}')
+        print(f'Solution by Gauss-Seidel method:\n{solutionGaussSeidel}')
 
-    # Obliczanie różnicy pomiędzy rozwiązaniem w poszczególnych iteracjach a rozwiązaniem dokładnym
-    w1 = []
-    last1 = err1[-1]
-    for i in range(len(err1) - 1):
-        w1.append(np.sqrt(sum(map(lambda a, b: (a - b) ** 2, err1[i], last1))))
+        # Obliczanie różnicy pomiędzy rozwiązaniem w poszczególnych iteracjach a rozwiązaniem dokładnym
+        diffsJacobi = []
+        for approximateSolution in iterativeApproxJacobi:
+            diffsJacobi.append(np.sqrt(sum(map(lambda a, b: (a - b) ** 2, approximateSolution, solutionJacobi))))
 
-    w2 = []
-    last2 = err2[-1]
-    for i in range(len(err2) - 1):
-        w2.append(np.sqrt(sum(map(lambda a, b: (a - b) ** 2, err2[i], last2))))
+        diffsGaussSeidel = []
+        for approximateSolution in iterativeApproxGaussSeidel:
+            diffsGaussSeidel.append(
+                np.sqrt(sum(map(lambda a, b: (a - b) ** 2, approximateSolution, solutionGaussSeidel))))
 
-    generate_graph(w1, w2)
+        generate_graph(diffsJacobi, diffsGaussSeidel, title=key)
