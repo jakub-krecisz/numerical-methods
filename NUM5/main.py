@@ -124,12 +124,12 @@ if __name__ == '__main__':
 
         # Calculate the difference between all iteration and the last iteration
         diffsJacobi, diffsGaussSeidel = [], []
-        for approximateSolution in iterativeApproxJacobi:
-            diffsJacobi.append(
-                np.sqrt(sum(map(lambda a, b: (a - b) ** 2, approximateSolution, iterativeApproxJacobi[-1]))))
-        for approximateSolution in iterativeApproxGaussSeidel:
-            diffsGaussSeidel.append(
-                np.sqrt(sum(map(lambda a, b: (a - b) ** 2, approximateSolution, iterativeApproxGaussSeidel[-1]))))
+        for iteration in range(len(iterativeApproxJacobi) - 1):
+            diffsJacobi.append(np.sqrt(sum(
+                map(lambda a, b: (a - b) ** 2, iterativeApproxJacobi[iteration], iterativeApproxJacobi[-1]))))
+        for iteration in range(len(iterativeApproxGaussSeidel) - 1):
+            diffsGaussSeidel.append(np.sqrt(sum(
+                map(lambda a, b: (a - b) ** 2, iterativeApproxGaussSeidel[iteration], iterativeApproxGaussSeidel[-1]))))
 
         # Generate a graph
         generate_graph(diffsJacobi, diffsGaussSeidel, titleStr=title)
