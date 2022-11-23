@@ -35,7 +35,7 @@ def solve_by_jacobin_method(xVector: list, bVector: list, size: int, maxIteratio
                                   xVector[index + 1] - 0.2 * xVector[index + 2]) / 3
 
         # checking the norm for actual iteration
-        actualNorm = np.sqrt(sum(map(lambda a, b: (a - b) ** 2, xVector, copyOfxVector)))
+        actualNorm = np.linalg.norm(np.array(xVector) - np.array(copyOfxVector))
 
         # saving approximation of actual iteration
         iterativeApprox.append(xVector.copy())
@@ -80,7 +80,7 @@ def solve_by_gauss_seidel_method(xVector: list, bVector: list, size: int, maxIte
                                   xVector[index + 1] - 0.2 * xVector[index + 2]) / 3
 
         # checking the norm for actual iteration
-        actualNorm = np.sqrt(sum(map(lambda a, b: (a - b) ** 2, xVector, copyOfxVector)))
+        actualNorm = np.linalg.norm(np.array(xVector) - np.array(copyOfxVector))
 
         # saving approximation of actual iteration
         iterativeApprox.append(xVector.copy())
@@ -100,7 +100,7 @@ def generate_graph(firstDiffs: list, secondDiffs: list, titleStr: str):
 
     :param firstDiffs: first difference list
     :param secondDiffs: second difference list
-    :param titleStr: title of our graph
+    :param titleStr: title for our graph
     """
     plt.grid(True)
     plt.xlabel('Number of iterations (n)')
@@ -119,17 +119,18 @@ if __name__ == '__main__':
         iterativeApproxGaussSeidel = solve_by_gauss_seidel_method(xVect.copy(), B_VECTOR, N, MAX_NUM_OF_ITERATIONS)
 
         # Last iteration is our solution in that case
+        print(f'Solution of our equation, for {N} matrix dimension and x vector with all {title} values')
         print(f'Solution by Jacobi method:\n{iterativeApproxJacobi[-1]}')
-        print(f'Solution by Gauss-Seidel method:\n{iterativeApproxGaussSeidel[-1]}')
+        print(f'Solution by Gauss-Seidel method:\n{iterativeApproxGaussSeidel[-1]}\n')
 
         # Calculate the difference between all iteration and the last iteration
         diffsJacobi, diffsGaussSeidel = [], []
         for iteration in range(len(iterativeApproxJacobi) - 1):
             diffsJacobi.append(np.sqrt(sum(
-                map(lambda a, b: (a - b) ** 2, iterativeApproxJacobi[iteration], iterativeApproxJacobi[-1]))))
+                map(lambda a, b: abs(a - b), iterativeApproxJacobi[iteration], iterativeApproxJacobi[-1]))))
         for iteration in range(len(iterativeApproxGaussSeidel) - 1):
             diffsGaussSeidel.append(np.sqrt(sum(
-                map(lambda a, b: (a - b) ** 2, iterativeApproxGaussSeidel[iteration], iterativeApproxGaussSeidel[-1]))))
+                map(lambda a, b: abs(a - b), iterativeApproxGaussSeidel[iteration], iterativeApproxGaussSeidel[-1]))))
 
         # Generate a graph
         generate_graph(diffsJacobi, diffsGaussSeidel, titleStr=title)

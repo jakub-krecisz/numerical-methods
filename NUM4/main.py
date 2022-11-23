@@ -39,18 +39,19 @@ def get_solution_by_sherman_morrison(size):
 def generate_graph():
     numpyResults = {}
     algorythmResults = {}
-
+    x= []
     for size in range(100, 10000, 200):
         numpyResults[size] = get_solution_by_numpy_lib(size)[0] * 1000000
         algorythmResults[size] = get_solution_by_sherman_morrison(size)[0] * 1000000
+        x.append(size)
 
     plt.grid(True)
-    plt.yscale('log')
     plt.title('Solving time')
     plt.xlabel('Matrix dimension (N)')
     plt.ylabel('Microseconds (μs)')
-    plt.plot(numpyResults.keys(), numpyResults.values(), 'tab:green')
-    plt.plot(numpyResults.keys(), algorythmResults.values(), 'tab:red')
+    plt.loglog(numpyResults.keys(), numpyResults.values(), 'tab:green')
+    plt.loglog(numpyResults.keys(), algorythmResults.values(), 'tab:red')
+    
     plt.legend(['Solving time by numPy library', 'Solving time by algorythm'])
     plt.show()
 

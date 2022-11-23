@@ -62,12 +62,11 @@ def generate_graph():
         numericalResults[size] = get_solution_numerically(size)[2] * 1000000
 
     plt.grid(True)
-    plt.yscale('log')
     plt.title('Computing time')
     plt.xlabel('Matrix dimension (N)')
     plt.ylabel('Microseconds (μs)')
-    plt.plot(numpyResults.keys(), numpyResults.values(), 'tab:green')
-    plt.plot(numpyResults.keys(), numericalResults.values(), 'tab:red')
+    plt.loglog(numpyResults.keys(), numpyResults.values(), 'tab:green')
+    plt.loglog(numpyResults.keys(), numericalResults.values(), 'tab:red')
     plt.legend(['Solving time by numPy library', 'Solving time numerically'])
     plt.show()
 
