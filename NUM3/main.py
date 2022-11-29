@@ -66,9 +66,11 @@ def generate_graph():
     plt.xlabel('Matrix dimension (N)')
     plt.ylabel('Microseconds (μs)')
     plt.loglog(numpyResults.keys(), numpyResults.values(), 'tab:green')
-    plt.loglog(numpyResults.keys(), numericalResults.values(), 'tab:red')
-    plt.legend(['Solving time by numPy library', 'Solving time numerically'])
-    plt.show()
+    plt.loglog(numericalResults.keys(), numericalResults.values(), 'tab:red')
+    plt.loglog(numericalResults.keys(), np.array(list(numericalResults.keys())), 'tab:gray')
+    plt.loglog(numpyResults.keys(), np.array(list(numpyResults.keys())) ** 2, 'tab:gray')
+    plt.legend(['Solving time by numPy library', 'Solving time numerically', 'f(x) = x', 'f(x) = x^2'])
+    plt.savefig('computing_time.svg')
 
 
 if __name__ == '__main__':
