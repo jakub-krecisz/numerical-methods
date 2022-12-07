@@ -1,7 +1,7 @@
 import numpy as np
 
 # Defined precision at which algorithm will finish
-PRECISION = 10 ** -15
+PRECISION = 10 ** -16
 
 # Maximal number of iteration
 MAX_ITERATIONS = 500
