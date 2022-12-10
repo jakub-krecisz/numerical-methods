@@ -1,7 +1,10 @@
 DIR = $(notdir $(CURDIR))
 
-run:
-	python3 main.py
+show_plots:
+	python3 main.py show
+
+save_plots:
+	python3 main.py save
 
 clean:
 	rm -rf __pycache__
