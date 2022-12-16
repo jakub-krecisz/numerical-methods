@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import sys
 from config import X_RANGE, FUNCTION_PARAMS
 
+# TODO oop
 def interpolation(function, nodeFunction, xArguments, degree):
     x = nodeFunction(degree)
     y, y_new = list(map(lambda a: function(a), x)), []
