@@ -17,6 +17,7 @@ def interpolation(function, nodeFunction, xArguments, degree):
             val += y[j] * product
         y_new.append(val)
     return y_new
+
 def save_plots(figure):
     figure.savefig(
         "wykres0_0.svg",
@@ -34,6 +35,7 @@ def save_plots(figure):
         "wykres1_1.svg",
         bbox_inches=mtransforms.Bbox([[0.5, 0], [1, 0.5]]).transformed(figure.transFigure - figure.dpi_scale_trans)
     )
+
 
 def generate_plots(whatToDo, xArguments):
     fig, axs = plt.subplots(2, 2)
