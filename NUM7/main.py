@@ -4,6 +4,7 @@ import matplotlib.transforms as mtransforms
 
 from config import X_RANGE, FUNCTION_PARAMS
 
+
 def interpolation(function, nodeFunction, xArguments, degree):
     x = nodeFunction(degree)
     y, y_new = list(map(function, x)), []
@@ -17,6 +18,7 @@ def interpolation(function, nodeFunction, xArguments, degree):
             val += y[j] * product
         y_new.append(val)
     return y_new
+
 
 def save_plots(figure):
     figure.savefig(
@@ -56,6 +58,7 @@ def generate_plots(whatToDo, xArguments):
     plt.setp(axs[:, :], xlabel='x', ylabel='y')
     fig.tight_layout(pad=1.0)
     plt.show() if whatToDo == 'show' else save_plots(fig)
+
 
 if __name__ == "__main__":
     generate_plots(sys.argv[1], X_RANGE)
