@@ -14,8 +14,8 @@ X_STOP = 10
 # Liczba punktów do wygenerowania
 NUM_POINTS = 100
 # Skala zaburzeń
-NOISE_SCALE = 5
+NOISE_SCALE = 0.000001
 # Funkcja B
-FUNCTION_B_COMPONENTS = ['sin(2*x)', 'sin(3*x)', 'cos(5*x)', 'exp(-x)']
-FUNCTION_B_COEFFICIENTS = np.array([1, 2, 3, 4], dtype=np.double)
+FUNCTION_B_COMPONENTS = ['cos(2*x)', 'sin(3*x)', 'cos(5*x)', 'exp(-x)']
+FUNCTION_B_COEFFICIENTS = np.array([1, 2, 3, 4])
 FUNCTION_B_XPOINTS = np.linspace(X_START, X_STOP, NUM_POINTS)
