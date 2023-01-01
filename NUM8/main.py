@@ -41,11 +41,12 @@ def _get_coefficients_using_least_squares_method(given_points: np.ndarray, funct
 def generate_plot_with_points_approximation(points_to_approximate: np.ndarray, function_components: list,
                                             exact_coefficients: np.ndarray = None):
     """
-
-    :param points_to_approximate:
-    :param function_components:
-    :param exact_coefficients:
-    :return:
+    The function takes a set of points and a function without coefficients.
+    Based on the least squares method, it approximates our coefficients at each component and generates plot.
+    When we give exact coefficients, our function will compare the approximations with the exact function.
+    :param points_to_approximate: points based on which we will perform interpolation using the least squares method
+    :param function_components: Components of our function
+    :param exact_coefficients: Alternative argument in which we store exact coefficients of our function
     """
     function_components = np.array(list(map(sympy.sympify, function_components)))
     coefficients = _get_coefficients_using_least_squares_method(points_to_approximate, function_components)
