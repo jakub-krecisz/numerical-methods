@@ -1,10 +1,16 @@
 DIR = $(notdir $(CURDIR))
 
-a:
-	python3 main.py point_a
+a_show:
+	python3 main.py point_a show
 
-b:
-	python3 main.py point_b
+a_save:
+	python3 main.py point_a save
+
+b_show:
+	python3 main.py point_b show
+
+b_save:
+	python3 main.py point_b save
 
 clean:
 	rm -rf __pycache__
