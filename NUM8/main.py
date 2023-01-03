@@ -37,7 +37,7 @@ def _get_coefficients_using_least_squares_method(given_points: np.ndarray, funct
 
 
 def generate_plot_with_points_approximation(points_to_approximate: np.ndarray, function_components: list,
-                                            exact_coefficients: np.ndarray = None):
+                                            exact_coefficients: np.ndarray = None) -> None:
     """
     The function takes a set of points and a function without coefficients.
     Based on the least squares method, it approximates our coefficients at each component and generates plot.
@@ -60,8 +60,7 @@ def generate_plot_with_points_approximation(points_to_approximate: np.ndarray, f
     plt.grid(True)
     plt.title(title)
 
-    print("Function = " + "+".join([f"{chr(ord('a') + i)}*{c}" for i, c in enumerate(function_components)]))
-    print(f"Founded coefficients = {coefficients}")
+    print(f"{title}\nFounded coefficients = {coefficients}")
     if exact_coefficients is None:
         plt.plot(points_to_approximate[:, 0], points_to_approximate[:, 1], 'o', color='black', lw=3,
                  label='Exact points')

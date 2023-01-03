@@ -38,9 +38,6 @@ def save_plots(figure):
         bbox_inches=mtransforms.Bbox([[0.5, 0], [1, 0.5]]).transformed(figure.transFigure - figure.dpi_scale_trans)
     )
 
-    if __name__ == "__main__":
-        generate_plots(sys.argv[1], X_RANGE)
-
 
 def generate_plots(whatToDo, xArguments):
     fig, axs = plt.subplots(2, 2)
@@ -63,4 +60,5 @@ def generate_plots(whatToDo, xArguments):
     plt.show() if whatToDo == 'show' else save_plots(fig)
 
 
-
+if __name__ == "__main__":
+    generate_plots(sys.argv[1], X_RANGE)

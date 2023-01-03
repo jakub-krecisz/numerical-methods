@@ -1,13 +1,3 @@
-"""
-----------------------------------------------------------------
-    The program analyzes the difference between derivative value
-    computed between the discrete derivative and the exact
-    derivative in given point
-----------------------------------------------------------------
-    Autor: Jakub Kręcisz                      Kraków, 16.10.2022
-----------------------------------------------------------------
-"""
-
 import sys
 import numpy as np
 import pandas as pd
