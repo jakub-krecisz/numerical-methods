@@ -73,15 +73,15 @@ def generate_plot_with_points_approximation(points_to_approximate: np.ndarray, f
         plt.plot(dense_x_range, _evaluate_function(function_components, coefficients, dense_x_range), color='red',
                  label='Approximation')
     plt.legend(loc='lower left')
-    plt.show() if sys.argv[2] == 'show' else plt.savefig(f"{sys.argv[1]}_plot.svg")
+    plt.show() if sys.argv[2] == 'show' else plt.savefig(f"{sys.argv[1]}_plot.pdf")
 
 
 if __name__ == '__main__':
     if sys.argv[1] == 'point_a':
         generate_plot_with_points_approximation(np.loadtxt(FILE_NAME), FUNCTION_A_COMPONENTS)
     elif sys.argv[1] == 'point_b':
-        yValues = _evaluate_function(np.array(list(map(sympy.sympify, FUNCTION_A_COMPONENTS))),
-                                     FUNCTION_B_COEFFICIENTS, FUNCTION_B_XPOINTS)
-        yValues = yValues + np.random.normal(0, NOISE_SCALE, len(yValues))
-        points = np.array([[x, y] for x, y in zip(FUNCTION_B_XPOINTS, yValues)], dtype=np.double)
+        y_values = _evaluate_function(np.array(list(map(sympy.sympify, FUNCTION_A_COMPONENTS))),
+                                      FUNCTION_B_COEFFICIENTS, FUNCTION_B_XPOINTS)
+        y_values = y_values + np.random.normal(0, NOISE_SCALE, len(y_values))
+        points = np.array([[x, y] for x, y in zip(FUNCTION_B_XPOINTS, y_values)], dtype=np.double)
         generate_plot_with_points_approximation(points, FUNCTION_B_COMPONENTS, FUNCTION_B_COEFFICIENTS)
