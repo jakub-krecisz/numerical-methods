@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from config import FUNCTION_A_COMPONENTS, FILE_NAME, FUNCTION_B_COMPONENTS, FUNCTION_B_COEFFICIENTS, \
-    FUNCTION_B_XPOINTS, NOISE_SCALE, NUM_POINTS, X
+    FUNCTION_B_ARGUMENTS, NOISE_SCALE, NUM_POINTS, X
 
 
 def _evaluate_function(function_components: np.ndarray, function_coefficients: np.ndarray, x_args: np.ndarray) \
@@ -60,18 +60,18 @@ def generate_plot_with_points_approximation(points_to_approximate: np.ndarray, f
     plt.grid(True)
     plt.title(title)
 
-    print(f"{title}\nFounded coefficients = {coefficients}")
+    print(f"{title}\nFound coefficients = {coefficients}")
     if exact_coefficients is None:
-        plt.plot(points_to_approximate[:, 0], points_to_approximate[:, 1], 'o', color='black', lw=3,
-                 label='Exact points')
-        plt.plot(dense_x_range, _evaluate_function(function_components, coefficients, dense_x_range), color='red',
-                 label='Approximation')
+        plt.plot(points_to_approximate[:, 0], points_to_approximate[:, 1],
+                 'o', color='black', label='Exact points', lw=3)
+        plt.plot(dense_x_range, _evaluate_function(function_components, coefficients, dense_x_range),
+                 color='red', label='Approximation')
     else:
         print(f"Exact coefficients = {exact_coefficients}")
         plt.plot(dense_x_range, _evaluate_function(function_components, exact_coefficients, dense_x_range),
-                 color='black', lw=3, label='Exact function')
-        plt.plot(dense_x_range, _evaluate_function(function_components, coefficients, dense_x_range), color='red',
-                 label='Approximation')
+                 color='black', label='Exact function', lw=3)
+        plt.plot(dense_x_range, _evaluate_function(function_components, coefficients, dense_x_range),
+                 color='red', label='Approximation')
     plt.legend(loc='lower left')
     plt.show() if sys.argv[2] == 'show' else plt.savefig(f"{sys.argv[1]}_plot.pdf")
 
@@ -80,8 +80,8 @@ if __name__ == '__main__':
     if sys.argv[1] == 'point_a':
         generate_plot_with_points_approximation(np.loadtxt(FILE_NAME), FUNCTION_A_COMPONENTS)
     elif sys.argv[1] == 'point_b':
-        y_values = _evaluate_function(np.array(list(map(sympy.sympify, FUNCTION_A_COMPONENTS))),
-                                      FUNCTION_B_COEFFICIENTS, FUNCTION_B_XPOINTS)
+        y_values = _evaluate_function(np.array(list(map(sympy.sympify, FUNCTION_B_COMPONENTS))),
+                                      FUNCTION_B_COEFFICIENTS, FUNCTION_B_ARGUMENTS)
         y_values = y_values + np.random.normal(0, NOISE_SCALE, len(y_values))
-        points = np.array([[x, y] for x, y in zip(FUNCTION_B_XPOINTS, y_values)], dtype=np.double)
+        points = np.array([[x, y] for x, y in zip(FUNCTION_B_ARGUMENTS, y_values)], dtype=np.double)
         generate_plot_with_points_approximation(points, FUNCTION_B_COMPONENTS, FUNCTION_B_COEFFICIENTS)
