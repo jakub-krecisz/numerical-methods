@@ -11,7 +11,7 @@ def _evaluate_function(function_components: np.ndarray, function_coefficients: n
         -> np.ndarray:
     """
     The function retrieves components and function coefficients,
-    then combines them into a single entity and calculates results for the given set of arguments x.
+    then combines them into a single entity and calculates results for the given list of arguments x.
     :param function_components: Components of our function
     :param function_coefficients: Coefficients of our function
     :param x_args: List of x arguments
@@ -39,7 +39,7 @@ def _get_coefficients_using_least_squares_method(given_points: np.ndarray, funct
 def generate_plot_with_points_approximation(points_to_approximate: np.ndarray, function_components: list,
                                             exact_coefficients: np.ndarray = None) -> None:
     """
-    The function takes a set of points and a function without coefficients.
+    The function takes a list of points and a function without coefficients.
     Based on the least squares method, it approximates our coefficients at each component and generates plot.
     When we give exact coefficients, our function will compare the approximations with the exact function.
     :param points_to_approximate: points based on which we will perform interpolation using the least squares method
@@ -53,14 +53,14 @@ def generate_plot_with_points_approximation(points_to_approximate: np.ndarray, f
     title = "Function approximation using least squares method\n$F(x)=" + \
             "+".join([f"{chr(ord('a') + i)}*{c}" for i, c in enumerate(function_components)]) + r"$"
     if exact_coefficients is not None:
-        title += f"\nNumber of points = {NUM_POINTS}   Noise scale = {NOISE_SCALE}"
+        title += f"\nNumber of points = {NUM_POINTS}  |  Noise scale = {NOISE_SCALE}"
 
     plt.figure(figsize=(10, 7))
     plt.xlabel("x"), plt.ylabel("y")
     plt.grid(True)
-    plt.title(title)
+    plt.title(title.replace('**', '^'))
 
-    print(f"{title}\nFound coefficients = {coefficients}")
+    print(f"{title.replace('$', '').replace('**', '^')}\nFound coefficients = {coefficients}")
     if exact_coefficients is None:
         plt.plot(points_to_approximate[:, 0], points_to_approximate[:, 1],
                  'o', color='black', label='Exact points', lw=3)
@@ -69,11 +69,15 @@ def generate_plot_with_points_approximation(points_to_approximate: np.ndarray, f
     else:
         print(f"Exact coefficients = {exact_coefficients}")
         plt.plot(dense_x_range, _evaluate_function(function_components, exact_coefficients, dense_x_range),
-                 color='black', label='Exact function', lw=3)
+                 color='black', label='Exact function', lw=4)
         plt.plot(dense_x_range, _evaluate_function(function_components, coefficients, dense_x_range),
                  color='red', label='Approximation')
-    plt.legend(loc='lower left')
-    plt.show() if sys.argv[2] == 'show' else plt.savefig(f"{sys.argv[1]}_plot.pdf")
+
+        # plot points with added noise for each y value
+        # plt.plot(points_to_approximate[:, 0], points_to_approximate[:, 1], 'o', color='green',
+        #          label='Points with noise')
+    plt.legend(loc='lower center')
+    plt.show() if sys.argv[2] == 'show' else plt.savefig(f"{sys.argv[1]}_plot.svg")
 
 
 if __name__ == '__main__':
