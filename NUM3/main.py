@@ -4,71 +4,71 @@ import time
 
 
 def get_solution_by_numpy_lib(size):
-    aMatrix = np.diag([0.2] * (size - 1), -1)
-    aMatrix += np.diag([1.2] * size)
-    aMatrix += np.diag([0.1 / i for i in range(1, size)], 1)
-    aMatrix += np.diag([0.4 / i ** 2 for i in range(1, size - 1)], 2)
-    xVector = np.array([_ for _ in range(1, size + 1)])
+    a_matrix = np.diag([0.2] * (size - 1), -1)
+    a_matrix += np.diag([1.2] * size)
+    a_matrix += np.diag([0.1 / i for i in range(1, size)], 1)
+    a_matrix += np.diag([0.4 / i ** 2 for i in range(1, size - 1)], 2)
+    x_vector = np.array([_ for _ in range(1, size + 1)])
 
-    startTime = time.time()
-    solution = np.linalg.solve(aMatrix, xVector)
+    start_time = time.time()
+    solution = np.linalg.solve(a_matrix, x_vector)
 
-    return solution, time.time() - startTime
+    return solution, time.time() - start_time
 
 
 def get_solution_numerically(size):
-    aMatrix = [[0] + [0.2] * (size - 1), [1.2] * size, [0.1 / i for i in range(1, size)] + [0],
+    a_matrix = [[0] + [0.2] * (size - 1), [1.2] * size, [0.1 / i for i in range(1, size)] + [0],
                [0.4 / i ** 2 for i in range(1, size - 1)] + [0] + [0]]
 
-    xVector = [_ for _ in range(1, size + 1)]
+    x_vector = [_ for _ in range(1, size + 1)]
 
-    startTime = time.time()
+    start_time = time.time()
     for i in range(1, size - 2):
-        aMatrix[0][i] = aMatrix[0][i] / aMatrix[1][i - 1]
-        aMatrix[1][i] = aMatrix[1][i] - aMatrix[0][i] * aMatrix[2][i - 1]
-        aMatrix[2][i] = aMatrix[2][i] - aMatrix[0][i] * aMatrix[3][i - 1]
+        a_matrix[0][i] = a_matrix[0][i] / a_matrix[1][i - 1]
+        a_matrix[1][i] = a_matrix[1][i] - a_matrix[0][i] * a_matrix[2][i - 1]
+        a_matrix[2][i] = a_matrix[2][i] - a_matrix[0][i] * a_matrix[3][i - 1]
 
-    aMatrix[0][size - 2] = aMatrix[0][size - 2] / aMatrix[1][size - 3]
-    aMatrix[1][size - 2] = aMatrix[1][size - 2] - aMatrix[0][size - 2] * aMatrix[2][size - 3]
-    aMatrix[2][size - 2] = aMatrix[2][size - 2] - aMatrix[0][size - 2] * aMatrix[3][size - 3]
+    a_matrix[0][size - 2] = a_matrix[0][size - 2] / a_matrix[1][size - 3]
+    a_matrix[1][size - 2] = a_matrix[1][size - 2] - a_matrix[0][size - 2] * a_matrix[2][size - 3]
+    a_matrix[2][size - 2] = a_matrix[2][size - 2] - a_matrix[0][size - 2] * a_matrix[3][size - 3]
 
-    aMatrix[0][size - 1] = aMatrix[0][size - 1] / aMatrix[1][size - 2]
-    aMatrix[1][size - 1] = aMatrix[1][size - 1] - aMatrix[0][size - 1] * aMatrix[2][size - 2]
+    a_matrix[0][size - 1] = a_matrix[0][size - 1] / a_matrix[1][size - 2]
+    a_matrix[1][size - 1] = a_matrix[1][size - 1] - a_matrix[0][size - 1] * a_matrix[2][size - 2]
 
     # Forward Substitution
     for i in range(1, size):
-        xVector[i] = xVector[i] - aMatrix[0][i] * xVector[i - 1]
+        x_vector[i] = x_vector[i] - a_matrix[0][i] * x_vector[i - 1]
 
     # Backward Substitution
-    xVector[size - 1] = xVector[size - 1] / aMatrix[1][size - 1]
-    xVector[size - 2] = (xVector[size - 2] - aMatrix[2][size - 2] * xVector[size - 1]) / aMatrix[1][size - 2]
+    x_vector[size - 1] = x_vector[size - 1] / a_matrix[1][size - 1]
+    x_vector[size - 2] = (x_vector[size - 2] - a_matrix[2][size - 2] * x_vector[size - 1]) / a_matrix[1][size - 2]
     for i in range(size - 3, -1, -1):
-        xVector[i] = (xVector[i] - aMatrix[3][i] * xVector[i + 2] - aMatrix[2][i] * xVector[i + 1]) / aMatrix[1][i]
+        x_vector[i] = (x_vector[i] - a_matrix[3][i] * x_vector[i + 2] - a_matrix[2][i] * x_vector[i + 1]) / a_matrix[1][i]
 
     # Determinant
-    detA = 1
-    for val in aMatrix[1]:
-        detA *= val
+    det_a = 1
+    for val in a_matrix[1]:
+        det_a *= val
 
-    return xVector, detA, time.time() - startTime
+    return x_vector, det_a, time.time() - start_time
 
 
 def generate_graph():
-    numpyResults = {}
-    numericalResults = {}
+    numpy_results = {}
+    numerical_results = {}
 
     for size in range(100, 10000, 200):
-        numpyResults[size] = get_solution_by_numpy_lib(size)[1] * 1000000
-        numericalResults[size] = get_solution_numerically(size)[2] * 1000000
+        numpy_results[size] = get_solution_by_numpy_lib(size)[1] * 1000000
+        numerical_results[size] = get_solution_numerically(size)[2] * 1000000
 
     plt.grid(True)
     plt.title('Computing time')
     plt.xlabel('Matrix dimension (N)')
     plt.ylabel('Microseconds (μs)')
-    plt.loglog(numpyResults.keys(), numpyResults.values(), 'tab:green')
-    plt.loglog(numericalResults.keys(), numericalResults.values(), 'tab:red')
-    plt.loglog(numericalResults.keys(), np.array(list(numericalResults.keys())), 'tab:gray')
-    plt.loglog(numpyResults.keys(), np.array(list(numpyResults.keys())) ** 2, 'tab:gray')
+    plt.loglog(numpy_results.keys(), numpy_results.values(), 'tab:green')
+    plt.loglog(numerical_results.keys(), numerical_results.values(), 'tab:red')
+    plt.loglog(numerical_results.keys(), np.array(list(numerical_results.keys())), 'tab:gray')
+    plt.loglog(numpy_results.keys(), np.array(list(numpy_results.keys())) ** 2, 'tab:gray')
     plt.legend(['Solving time by numPy library', 'Solving time numerically', 'f(x) = x', 'f(x) = x^2'])
     plt.savefig('computing_time.svg')
 
