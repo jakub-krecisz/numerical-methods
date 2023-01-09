@@ -4,53 +4,53 @@ import matplotlib.pyplot as plt
 
 
 def get_solution_by_numpy_lib(size):
-    aMatrix = np.ones((size, size))
-    aMatrix += np.diag([9] * size)
-    aMatrix += np.diag([7] * (size - 1), 1)
-    bMatrix = np.array([5] * size).transpose()
+    a_matrix = np.ones((size, size))
+    a_matrix += np.diag([9] * size)
+    a_matrix += np.diag([7] * (size - 1), 1)
+    b_matrix = np.array([5] * size).transpose()
 
-    startTimeTime = time.time()
-    result = np.linalg.solve(aMatrix, bMatrix)
-    return time.time() - startTimeTime, result
+    start_time = time.time()
+    result = np.linalg.solve(a_matrix, b_matrix)
+    return time.time() - start_time, result
 
 
 def get_solution_by_sherman_morrison(size):
-    bandMatrix = [[9] * size, [7] * (size - 1) + [0]]
-    bMatrix = [5] * size
-    zVector, xVector = [0] * size, [0] * size
-    resultVector = []
+    band_matrix = [[9] * size, [7] * (size - 1) + [0]]
+    b_matrix = [5] * size
+    z_vector, x_vector = [0] * size, [0] * size
+    result_vector = []
 
-    startTime = time.time()
-    zVector[-1] = bMatrix[size - 1] / bandMatrix[0][size - 1]
-    xVector[-1] = 1 / bandMatrix[0][size - 1]
+    start_time = time.time()
+    z_vector[-1] = b_matrix[size - 1] / band_matrix[0][size - 1]
+    x_vector[-1] = 1 / band_matrix[0][size - 1]
 
     for index in range(size - 2, -1, -1):
-        zVector[index] = (bMatrix[-2] - bandMatrix[1][index] * zVector[index + 1]) / bandMatrix[0][index]
-        xVector[index] = (1 - bandMatrix[1][index] * xVector[index + 1]) / bandMatrix[0][index]
+        z_vector[index] = (b_matrix[-2] - band_matrix[1][index] * z_vector[index + 1]) / band_matrix[0][index]
+        x_vector[index] = (1 - band_matrix[1][index] * x_vector[index + 1]) / band_matrix[0][index]
 
-    delta = sum(zVector) / (1 + sum(xVector))
+    delta = sum(z_vector) / (1 + sum(x_vector))
 
-    for zVal, xVal in zip(zVector, xVector):
-        resultVector.append(zVal - xVal * delta)
+    for z_val, x_val in zip(z_vector, x_vector):
+        result_vector.append(z_val - x_val * delta)
 
-    return time.time() - startTime, resultVector
+    return time.time() - start_time, result_vector
 
 
 def generate_graph():
-    numpyResults = {}
-    algorythmResults = {}
+    numpy_results = {}
+    algorythm_results = {}
     for size in range(100, 10000, 200):
-        numpyResults[size] = get_solution_by_numpy_lib(size)[0] * 1000000
-        algorythmResults[size] = get_solution_by_sherman_morrison(size)[0] * 1000000
+        numpy_results[size] = get_solution_by_numpy_lib(size)[0] * 1000000
+        algorythm_results[size] = get_solution_by_sherman_morrison(size)[0] * 1000000
 
     plt.grid(True)
     plt.title('Solving time')
     plt.xlabel('Matrix dimension (N)')
     plt.ylabel('Microseconds (μs)')
-    plt.loglog(numpyResults.keys(), numpyResults.values(), 'tab:green')
-    plt.loglog(algorythmResults.keys(), algorythmResults.values(), 'tab:red')
-    plt.loglog(numpyResults.keys(), np.array(list(numpyResults.keys())), 'tab:gray')
-    plt.loglog(numpyResults.keys(), np.array(list(numpyResults.keys()))**2, 'tab:gray')
+    plt.loglog(numpy_results.keys(), numpy_results.values(), 'tab:green')
+    plt.loglog(algorythm_results.keys(), algorythm_results.values(), 'tab:red')
+    plt.loglog(numpy_results.keys(), np.array(list(numpy_results.keys())), 'tab:gray')
+    plt.loglog(numpy_results.keys(), np.array(list(numpy_results.keys()))**2, 'tab:gray')
 
     plt.legend(['Solving time by numPy library', 'Solving time by algorythm', 'F(x) = x', 'F(x) = x^2'])
     # plt.show()
