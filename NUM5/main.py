@@ -4,12 +4,12 @@ import matplotlib.pyplot as plt
 from config import N, B_VECTOR, X_VECTOR, MAX_NUM_OF_ITERATIONS, PRECISION
 
 
-def solve_by_jacobin_method(xVector: list, bVector: list, size: int, maxIterations: int) -> list:
+def solve_by_jacobin_method(x_vector: list, bVector: list, size: int, maxIterations: int) -> list:
     """
     The function determines the solution of our given equation to the
     specified precision of the results or to the maximum number of iterations by Jacobin method.
 
-    :param xVector: our vector x with example values
+    :param x_vector: our vector x with example values
     :param bVector: our b vector from the equation
     :param size: our matrix dimension
     :param maxIterations: maximum number of iterations
@@ -18,27 +18,27 @@ def solve_by_jacobin_method(xVector: list, bVector: list, size: int, maxIteratio
     iterativeApprox = []
     previousNorm = 0
     for _ in range(maxIterations):
-        copyOfxVector = xVector.copy()
+        copyOfxVector = x_vector.copy()
         for index in range(size):
             if index == 0:
-                xVector[index] = (bVector[index] - xVector[index + 1] - 0.2 * xVector[index + 2]) / 3
+                x_vector[index] = (bVector[index] - x_vector[index + 1] - 0.2 * x_vector[index + 2]) / 3
             elif index == 1:
-                xVector[index] = (bVector[index] - copyOfxVector[index - 1] - xVector[index + 1] - 0.2 *
-                                  xVector[index + 2]) / 3
+                x_vector[index] = (bVector[index] - copyOfxVector[index - 1] - x_vector[index + 1] - 0.2 *
+                                   x_vector[index + 2]) / 3
             elif index == size - 2:
-                xVector[index] = (bVector[index] - copyOfxVector[index - 1] - 0.2 * copyOfxVector[index - 2] -
-                                  xVector[index + 1]) / 3
+                x_vector[index] = (bVector[index] - copyOfxVector[index - 1] - 0.2 * copyOfxVector[index - 2] -
+                                   x_vector[index + 1]) / 3
             elif index == size - 1:
-                xVector[index] = (bVector[index] - copyOfxVector[index - 1] - 0.2 * copyOfxVector[index - 2]) / 3
+                x_vector[index] = (bVector[index] - copyOfxVector[index - 1] - 0.2 * copyOfxVector[index - 2]) / 3
             else:
-                xVector[index] = (bVector[index] - copyOfxVector[index - 1] - 0.2 * copyOfxVector[index - 2] -
-                                  xVector[index + 1] - 0.2 * xVector[index + 2]) / 3
+                x_vector[index] = (bVector[index] - copyOfxVector[index - 1] - 0.2 * copyOfxVector[index - 2] -
+                                   x_vector[index + 1] - 0.2 * x_vector[index + 2]) / 3
 
         # checking the norm for actual iteration
-        actualNorm = np.linalg.norm(np.array(xVector) - np.array(copyOfxVector))
+        actualNorm = np.linalg.norm(np.array(x_vector) - np.array(copyOfxVector))
 
         # saving approximation of actual iteration
-        iterativeApprox.append(xVector.copy())
+        iterativeApprox.append(x_vector.copy())
 
         # convergence check
         if abs(previousNorm - actualNorm) > 10 ** PRECISION:
