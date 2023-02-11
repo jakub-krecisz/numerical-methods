@@ -36,7 +36,7 @@ def get_solution_by_sherman_morrison(size):
     return time.time() - start_time, result_vector
 
 
-def generate_graph():
+def generate_graph(do: str):
     numpy_results = {}
     algorythm_results = {}
     for size in range(100, 10000, 200):
@@ -53,10 +53,9 @@ def generate_graph():
     plt.loglog(numpy_results.keys(), np.array(list(numpy_results.keys()))**2, 'tab:gray')
 
     plt.legend(['Solving time by numPy library', 'Solving time by algorythm', 'F(x) = x', 'F(x) = x^2'])
-    # plt.show()
-    plt.savefig('solving_time.svg')
+    plt.show() if do == 'show' else plt.savefig('solving_time.svg')
 
 
 if __name__ == '__main__':
     print(f'The solution of the equation Ay = b for N = 50:\n{get_solution_by_sherman_morrison(50)[1]}')
-    generate_graph()
+    generate_graph('show')

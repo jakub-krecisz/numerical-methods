@@ -18,7 +18,7 @@ def get_solution_by_numpy_lib(size):
 
 def get_solution_numerically(size):
     a_matrix = [[0] + [0.2] * (size - 1), [1.2] * size, [0.1 / i for i in range(1, size)] + [0],
-               [0.4 / i ** 2 for i in range(1, size - 1)] + [0] + [0]]
+                [0.4 / i ** 2 for i in range(1, size - 1)] + [0] + [0]]
 
     x_vector = [_ for _ in range(1, size + 1)]
 
@@ -43,7 +43,8 @@ def get_solution_numerically(size):
     x_vector[size - 1] = x_vector[size - 1] / a_matrix[1][size - 1]
     x_vector[size - 2] = (x_vector[size - 2] - a_matrix[2][size - 2] * x_vector[size - 1]) / a_matrix[1][size - 2]
     for i in range(size - 3, -1, -1):
-        x_vector[i] = (x_vector[i] - a_matrix[3][i] * x_vector[i + 2] - a_matrix[2][i] * x_vector[i + 1]) / a_matrix[1][i]
+        x_vector[i] = (x_vector[i] - a_matrix[3][i] * x_vector[i + 2] - a_matrix[2][i] * x_vector[i + 1])\
+                      / a_matrix[1][i]
 
     # Determinant
     det_a = 1
@@ -54,10 +55,9 @@ def get_solution_numerically(size):
 
 
 def generate_graph():
-    numpy_results = {}
-    numerical_results = {}
+    numpy_results, numerical_results = {}, {}
 
-    for size in range(100, 10000, 200):
+    for size in range(100, 6000, 200):
         numpy_results[size] = get_solution_by_numpy_lib(size)[1] * 1000000
         numerical_results[size] = get_solution_numerically(size)[2] * 1000000
 
@@ -70,7 +70,7 @@ def generate_graph():
     plt.loglog(numerical_results.keys(), np.array(list(numerical_results.keys())), 'tab:gray')
     plt.loglog(numpy_results.keys(), np.array(list(numpy_results.keys())) ** 2, 'tab:gray')
     plt.legend(['Solving time by numPy library', 'Solving time numerically', 'f(x) = x', 'f(x) = x^2'])
-    plt.savefig('computing_time.svg')
+    plt.show()
 
 
 if __name__ == '__main__':
