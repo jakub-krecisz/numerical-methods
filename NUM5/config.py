@@ -12,8 +12,8 @@ X_VECTOR = {'random': random.sample(range(1, 500), N),
             'ones': [1 for _ in range(N)],
             'nines': [9 for _ in range(N)]}
 
-# Max number of iteration at which algorythm will finish
+# Max number of iteration at which algorithm will finish
 MAX_NUM_OF_ITERATIONS = 500
 
-# Defined precision at which algorythm will finish
+# Defined precision at which algorithm will finish
 PRECISION = -16

@@ -1,136 +1,138 @@
+from typing import List
+
 import numpy as np
 import matplotlib.pyplot as plt
 
 from config import N, B_VECTOR, X_VECTOR, MAX_NUM_OF_ITERATIONS, PRECISION
 
 
-def solve_by_jacobin_method(x_vector: list, bVector: list, size: int, maxIterations: int) -> list:
+def solve_by_jacobi_method(x_vector: List[float], b_vector: List[float],
+                           size: int, max_iterations: int) -> List[List[float]]:
     """
-    The function determines the solution of our given equation to the
-    specified precision of the results or to the maximum number of iterations by Jacobin method.
+    Solve the given equation using the Jacobi method to the specified precision or maximum number of iterations.
 
-    :param x_vector: our vector x with example values
-    :param bVector: our b vector from the equation
-    :param size: our matrix dimension
-    :param maxIterations: maximum number of iterations
-    :return: list of approximations for all iterations
+    :param x_vector: Initial vector x
+    :param b_vector: Vector b from the equation
+    :param size: Matrix dimension
+    :param max_iterations: Maximum number of iterations
+    :return: List of approximations for each iteration
     """
-    iterativeApprox = []
-    previousNorm = 0
-    for _ in range(maxIterations):
-        copyOfxVector = x_vector.copy()
+    iterative_approx = []
+    previous_norm = 0
+    for _ in range(max_iterations):
+        copy_ofx_vector = x_vector.copy()
         for index in range(size):
             if index == 0:
-                x_vector[index] = (bVector[index] - x_vector[index + 1] - 0.2 * x_vector[index + 2]) / 3
+                x_vector[index] = (b_vector[index] - x_vector[index + 1] - 0.2 * x_vector[index + 2]) / 3
             elif index == 1:
-                x_vector[index] = (bVector[index] - copyOfxVector[index - 1] - x_vector[index + 1] - 0.2 *
+                x_vector[index] = (b_vector[index] - copy_ofx_vector[index - 1] - x_vector[index + 1] - 0.2 *
                                    x_vector[index + 2]) / 3
             elif index == size - 2:
-                x_vector[index] = (bVector[index] - copyOfxVector[index - 1] - 0.2 * copyOfxVector[index - 2] -
+                x_vector[index] = (b_vector[index] - copy_ofx_vector[index - 1] - 0.2 * copy_ofx_vector[index - 2] -
                                    x_vector[index + 1]) / 3
             elif index == size - 1:
-                x_vector[index] = (bVector[index] - copyOfxVector[index - 1] - 0.2 * copyOfxVector[index - 2]) / 3
+                x_vector[index] = (b_vector[index] - copy_ofx_vector[index - 1] - 0.2 * copy_ofx_vector[index - 2]) / 3
             else:
-                x_vector[index] = (bVector[index] - copyOfxVector[index - 1] - 0.2 * copyOfxVector[index - 2] -
+                x_vector[index] = (b_vector[index] - copy_ofx_vector[index - 1] - 0.2 * copy_ofx_vector[index - 2] -
                                    x_vector[index + 1] - 0.2 * x_vector[index + 2]) / 3
 
         # checking the norm for actual iteration
-        actualNorm = np.linalg.norm(np.array(x_vector) - np.array(copyOfxVector))
+        actual_norm = np.linalg.norm(np.array(x_vector) - np.array(copy_ofx_vector))
 
         # saving approximation of actual iteration
-        iterativeApprox.append(x_vector.copy())
+        iterative_approx.append(x_vector.copy())
 
         # convergence check
-        if abs(previousNorm - actualNorm) > 10 ** PRECISION:
-            previousNorm = actualNorm
+        if abs(previous_norm - actual_norm) > 10 ** PRECISION:
+            previous_norm = actual_norm
         else:
             break
 
-    return iterativeApprox
+    return iterative_approx
 
 
-def solve_by_gauss_seidel_method(xVector: list, bVector: list, size: int, maxIterations: int) -> list:
+def solve_by_gauss_seidel_method(x_vector: List[float], b_vector: List[float],
+                                 size: int, max_iterations: int) -> List[List[float]]:
     """
-    The function determines the solution of our given equation to the
-    specified precision of the results or to the maximum number of iterations by Gauss-Seidel method.
+    Solve the given equation using the Gauss-Seidel method to the specified precision or maximum number of iterations.
 
-    :param xVector: our vector x with example values
-    :param bVector: our b vector from the equation
-    :param size: our matrix dimension
-    :param maxIterations: maximum number of iterations
-    :return: list of approximations for all iterations
+    :param x_vector: Initial vector x
+    :param b_vector: Vector b from the equation
+    :param size: Matrix dimension
+    :param max_iterations: Maximum number of iterations
+    :return: List of approximations for each iteration
     """
-    iterativeApprox = []
-    previousNorm = 0
-    for _ in range(maxIterations):
-        copyOfxVector = xVector.copy()
+    iterative_approx = []
+    previous_norm = 0
+    for _ in range(max_iterations):
+        copy_ofx_vector = x_vector.copy()
         for index in range(size):
             if index == 0:
-                xVector[index] = (bVector[index] - xVector[index + 1] - 0.2 * xVector[index + 2]) / 3
+                x_vector[index] = (b_vector[index] - x_vector[index + 1] - 0.2 * x_vector[index + 2]) / 3
             elif index == 1:
-                xVector[index] = (bVector[index] - xVector[index - 1] - xVector[index + 1] - 0.2 *
-                                  xVector[index + 2]) / 3
+                x_vector[index] = (b_vector[index] - x_vector[index - 1] - x_vector[index + 1] - 0.2 *
+                                   x_vector[index + 2]) / 3
             elif index == size - 2:
-                xVector[index] = (bVector[index] - xVector[index - 1] - 0.2 * xVector[index - 2] -
-                                  xVector[index + 1]) / 3
+                x_vector[index] = (b_vector[index] - x_vector[index - 1] - 0.2 * x_vector[index - 2] -
+                                   x_vector[index + 1]) / 3
             elif index == size - 1:
-                xVector[index] = (bVector[index] - xVector[index - 1] - 0.2 * xVector[index - 2]) / 3
+                x_vector[index] = (b_vector[index] - x_vector[index - 1] - 0.2 * x_vector[index - 2]) / 3
             else:
-                xVector[index] = (bVector[index] - xVector[index - 1] - 0.2 * xVector[index - 2] -
-                                  xVector[index + 1] - 0.2 * xVector[index + 2]) / 3
+                x_vector[index] = (b_vector[index] - x_vector[index - 1] - 0.2 * x_vector[index - 2] -
+                                   x_vector[index + 1] - 0.2 * x_vector[index + 2]) / 3
 
         # checking the norm for actual iteration
-        actualNorm = np.linalg.norm(np.array(xVector) - np.array(copyOfxVector))
+        actual_norm = np.linalg.norm(np.array(x_vector) - np.array(copy_ofx_vector))
 
         # saving approximation of actual iteration
-        iterativeApprox.append(xVector.copy())
+        iterative_approx.append(x_vector.copy())
 
         # convergence check
-        if abs(previousNorm - actualNorm) > 10 ** PRECISION:
-            previousNorm = actualNorm
+        if abs(previous_norm - actual_norm) > 10 ** PRECISION:
+            previous_norm = actual_norm
         else:
             break
 
-    return iterativeApprox
+    return iterative_approx
 
 
-def generate_graph(firstDiffs: list, secondDiffs: list, titleStr: str):
+def generate_graph(first_diffs: List[float], second_diffs: List[float], title_str: str) -> None:
     """
-    The function generates a graph based on the differences and their iteration number.
+    Generate a graph based on the differences and their iteration number.
 
-    :param firstDiffs: first difference list
-    :param secondDiffs: second difference list
-    :param titleStr: title for our graph
+    :param first_diffs: List of differences for the Jacobi method
+    :param second_diffs: List of differences for the Gauss-Seidel method
+    :param title_str: Title for the graph
     """
     plt.grid(True)
     plt.xlabel('Number of iterations (n)')
     plt.ylabel("$|x(n) - x[-1]|$")
     plt.yscale('log')
-    plt.plot(list(range(1, len(firstDiffs) + 1)), firstDiffs, 'tab:green')
-    plt.plot(list(range(1, len(secondDiffs) + 1)), secondDiffs, 'tab:red')
-    plt.legend(['Jacobin Method', 'Gauss-Seidel method'])
-    plt.title(f'Comparison iterative methods; x with all {titleStr} values')
+    plt.plot(list(range(1, len(first_diffs) + 1)), first_diffs, 'tab:green')
+    plt.plot(list(range(1, len(second_diffs) + 1)), second_diffs, 'tab:red')
+    plt.legend(['Jacobi Method', 'Gauss-Seidel Method'])
+    plt.title(f'Comparison of Iterative Methods; x with all {title_str} values')
     plt.show()
 
 
 if __name__ == '__main__':
-    for title, xVect in X_VECTOR.items():
-        iterativeApproxJacobi = solve_by_jacobin_method(xVect.copy(), B_VECTOR, N, MAX_NUM_OF_ITERATIONS)
-        iterativeApproxGaussSeidel = solve_by_gauss_seidel_method(xVect.copy(), B_VECTOR, N, MAX_NUM_OF_ITERATIONS)
+    for title, x_vect in X_VECTOR.items():
+        iterative_approx_jacobi = solve_by_jacobi_method(x_vect.copy(), B_VECTOR, N, MAX_NUM_OF_ITERATIONS)
+        iterative_approx_gauss_seidel = solve_by_gauss_seidel_method(x_vect.copy(), B_VECTOR, N, MAX_NUM_OF_ITERATIONS)
 
-        # Last iteration is our solution in that case
-        print(f'Solution of our equation, for {N} matrix dimension and x vector with all {title} values')
-        print(f'Solution by Jacobi method:\n{iterativeApproxJacobi[-1]}')
-        print(f'Solution by Gauss-Seidel method:\n{iterativeApproxGaussSeidel[-1]}\n')
+        # The last iteration gives us the solution
+        print(f'Solution of the equation for N={N}, x vector with all {title} values')
+        print(f'Solution by Jacobi method:\n{iterative_approx_jacobi[-1]}')
+        print(f'Solution by Gauss-Seidel method:\n{iterative_approx_gauss_seidel[-1]}\n')
 
-        # Calculate the difference between all iteration and the last iteration
-        diffsJacobi, diffsGaussSeidel = [], []
-        for iteration in range(len(iterativeApproxJacobi) - 1):
-            diffsJacobi.append(np.sqrt(sum(
-                map(lambda a, b: abs(a - b), iterativeApproxJacobi[iteration], iterativeApproxJacobi[-1]))))
-        for iteration in range(len(iterativeApproxGaussSeidel) - 1):
-            diffsGaussSeidel.append(np.sqrt(sum(
-                map(lambda a, b: abs(a - b), iterativeApproxGaussSeidel[iteration], iterativeApproxGaussSeidel[-1]))))
+        # Calculate the difference between each iteration and the last iteration
+        diffs_jacobi, diffs_gauss_seidel = [], []
+        for iteration in range(len(iterative_approx_jacobi) - 1):
+            diffs_jacobi.append(np.sqrt(sum(
+                map(lambda a, b: abs(a - b), iterative_approx_jacobi[iteration], iterative_approx_jacobi[-1]))))
+        for iteration in range(len(iterative_approx_gauss_seidel) - 1):
+            diffs_gauss_seidel.append(np.sqrt(sum(
+                map(lambda a, b: abs(a - b), iterative_approx_gauss_seidel[iteration], iterative_approx_gauss_seidel[-1]))))
 
         # Generate a graph
-        generate_graph(diffsJacobi, diffsGaussSeidel, titleStr=title)
+        generate_graph(diffs_jacobi, diffs_gauss_seidel, title_str=title)
