@@ -1,19 +1,37 @@
 import numpy as np
 
+from typing import List
 from tabulate import tabulate
 from config import PRECISION, MAX_ITERATIONS, M_MATRIX, B_MATRIX, Y_VECTOR
 
-def _iterate_qr(matrix: np.array) -> np.array:
+def _iterate_qr(matrix: np.ndarray) -> np.ndarray:
+    """
+    Perform one iteration of the QR algorithm.
+
+    :param matrix: Input matrix.
+    :return: Result of the iteration.
+    """
     matrixQ, matrixR = np.linalg.qr(matrix)
     return np.matmul(matrixR, matrixQ)
 
+def _iterate_power(matrix: np.ndarray, vectorY: np.ndarray) -> np.ndarray:
+    """
+    Perform one iteration of the power method.
 
-def _iterate_power(matrix, vectorY):
+    :param matrix: Input matrix.
+    :param vectorY: Input vector.
+    :return: Result of the iteration.
+    """
     vectorZ = np.matmul(matrix, vectorY)
     return vectorZ / np.linalg.norm(vectorZ)
 
+def get_eigenvalues_by_qr_algorithm(matrix: np.ndarray) -> List[float]:
+    """
+    Compute the eigenvalues of a matrix using the QR algorithm.
 
-def get_eigenvalues_by_qr_algorithm(matrix: np.array) -> list:
+    :param matrix: Input matrix.
+    :return: List of eigenvalues.
+    """
     result = _iterate_qr(matrix)
     for _ in range(MAX_ITERATIONS):
         result = _iterate_qr(result)
@@ -21,8 +39,14 @@ def get_eigenvalues_by_qr_algorithm(matrix: np.array) -> list:
             break
     return [result[x][x] for x in range(len(result))][::-1]
 
+def get_eigenvector_by_power_method(matrix: np.ndarray, vectorY: np.ndarray) -> np.ndarray:
+    """
+    Compute the dominant eigenvector of a matrix using the power method.
 
-def get_eigenvector_by_power_method(matrix, vectorY):
+    :param matrix: Input matrix.
+    :param vectorY: Initial vector.
+    :return: Dominant eigenvector.
+    """
     result = _iterate_power(matrix, vectorY)
     for _ in range(MAX_ITERATIONS):
         previousIteration = result
@@ -30,7 +54,6 @@ def get_eigenvector_by_power_method(matrix, vectorY):
         if np.linalg.norm(previousIteration - result) < PRECISION:
             break
     return result
-
 
 if __name__ == '__main__':
     print(f'Eigenvalues by QR algorithm:\n{get_eigenvalues_by_qr_algorithm(M_MATRIX)}')

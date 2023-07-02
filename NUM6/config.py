@@ -17,4 +17,3 @@ B_MATRIX = np.array([[3, 4, 2, 4],
                      [4, -3, 2, 2]])
 
 Y_VECTOR = np.array([1 for _ in range(len(B_MATRIX))])
-

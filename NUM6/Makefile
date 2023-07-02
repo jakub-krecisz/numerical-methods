@@ -8,4 +8,3 @@ clean:
 
 tar: clean
 	(cd ../; tar -cvzf $(DIR).tar.gz $(DIR))
-
