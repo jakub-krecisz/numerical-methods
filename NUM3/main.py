@@ -2,8 +2,17 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 
+from datetime import timedelta
+from typing import Tuple
 
-def get_solution_by_numpy_lib(size):
+
+def get_solution_by_numpy_lib(size: int) -> Tuple[np.ndarray, float]:
+    """
+    Solves a linear system of equations using the numpy library.
+
+    :param size: Dimension of the matrix.
+    :return: Tuple containing the solution vector and the execution time in seconds.
+    """
     a_matrix = np.diag([0.2] * (size - 1), -1)
     a_matrix += np.diag([1.2] * size)
     a_matrix += np.diag([0.1 / i for i in range(1, size)], 1)
@@ -16,13 +25,20 @@ def get_solution_by_numpy_lib(size):
     return solution, time.time() - start_time
 
 
-def get_solution_numerically(size):
-    a_matrix = [[0] + [0.2] * (size - 1), [1.2] * size, [0.1 / i for i in range(1, size)] + [0],
+def get_solution_numerically(size: int) -> Tuple[list, float, float]:
+    """
+    Solves a linear system of equations numerically.
+
+    :param size: Dimension of the matrix.
+    :return: Tuple containing the solution vector, determinant of the matrix, and the execution time in seconds.
+    """
+    a_matrix = [[0.0] + [0.2] * (size - 1), [1.2] * size, [0.1 / i for i in range(1, size)] + [0],
                 [0.4 / i ** 2 for i in range(1, size - 1)] + [0] + [0]]
 
     x_vector = [_ for _ in range(1, size + 1)]
 
     start_time = time.time()
+    # Gaussian elimination with partial pivoting
     for i in range(1, size - 2):
         a_matrix[0][i] = a_matrix[0][i] / a_matrix[1][i - 1]
         a_matrix[1][i] = a_matrix[1][i] - a_matrix[0][i] * a_matrix[2][i - 1]
@@ -37,10 +53,10 @@ def get_solution_numerically(size):
 
     # Forward Substitution
     for i in range(1, size):
-        x_vector[i] = x_vector[i] - a_matrix[0][i] * x_vector[i - 1]
+        x_vector[i] -= a_matrix[0][i] * x_vector[i - 1]
 
     # Backward Substitution
-    x_vector[size - 1] = x_vector[size - 1] / a_matrix[1][size - 1]
+    x_vector[size - 1] /= a_matrix[1][size - 1]
     x_vector[size - 2] = (x_vector[size - 2] - a_matrix[2][size - 2] * x_vector[size - 1]) / a_matrix[1][size - 2]
     for i in range(size - 3, -1, -1):
         x_vector[i] = (x_vector[i] - a_matrix[3][i] * x_vector[i + 2] - a_matrix[2][i] * x_vector[i + 1])\
@@ -54,7 +70,12 @@ def get_solution_numerically(size):
     return x_vector, det_a, time.time() - start_time
 
 
-def generate_graph():
+def generate_graph() -> plt.plot:
+    """
+    Generates a graph comparing the execution time of solving linear equations using different methods.
+
+    :return: Matplotlib plot object.
+    """
     numpy_results, numerical_results = {}, {}
 
     for size in range(100, 6000, 200):
@@ -70,11 +91,16 @@ def generate_graph():
     plt.loglog(numerical_results.keys(), np.array(list(numerical_results.keys())), 'tab:gray')
     plt.loglog(numpy_results.keys(), np.array(list(numpy_results.keys())) ** 2, 'tab:gray')
     plt.legend(['Solving time by numPy library', 'Solving time numerically', 'f(x) = x', 'f(x) = x^2'])
-    plt.show()
+    return plt
 
 
 if __name__ == '__main__':
-    n = 100
-    print(f'The solution of the equation for N = {n}:\n{get_solution_numerically(n)[0]}\n'
-          f'The determinant of A is equal: det(A) = {get_solution_numerically(n)[1]}')
-    generate_graph()
+    N = 100  # Dimension of the matrix
+
+    numerical_solution, numerical_determinant, ex_time = get_solution_numerically(N)
+    print(f'The solution of the equation for N = {N}:\n{numerical_solution}\n'
+          f'The determinant of A is equal: det(A) = {numerical_determinant}\n'
+          f'The execution time: {timedelta(seconds=ex_time)}')
+
+    plot = generate_graph()
+    plot.show()
