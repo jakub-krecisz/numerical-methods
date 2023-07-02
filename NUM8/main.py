@@ -7,29 +7,29 @@ from config import FUNCTION_A_COMPONENTS, FILE_NAME, FUNCTION_B_COMPONENTS, FUNC
     FUNCTION_B_ARGUMENTS, NOISE_SCALE, NUM_POINTS, X
 
 
-def _evaluate_function(function_components: np.ndarray, function_coefficients: np.ndarray, x_args: np.ndarray) \
-        -> np.ndarray:
+def _evaluate_function(function_components: np.ndarray, function_coefficients: np.ndarray,
+                       x_args: np.ndarray) -> np.ndarray:
     """
-    The function retrieves components and function coefficients,
-    then combines them into a single entity and calculates results for the given list of arguments x.
-    :param function_components: Components of our function
-    :param function_coefficients: Coefficients of our function
-    :param x_args: List of x arguments
-    :return: List containing the results of function calls for each given argument
+    Evaluates the function by combining its components and coefficients.
+
+    :param function_components: Components of the function.
+    :param function_coefficients: Coefficients of the function.
+    :param x_args: List of x arguments.
+    :return: List of function values for the given x arguments.
     """
     function = sum([coefficient * component for coefficient, component in
                     zip(function_coefficients, function_components)])
     return np.array([function.evalf(subs={X: arg}) for arg in x_args])
 
 
-def _get_coefficients_using_least_squares_method(given_points: np.ndarray, function_components: np.ndarray) \
-        -> np.ndarray:
+def _get_coefficients_using_least_squares_method(given_points: np.ndarray,
+                                                 function_components: np.ndarray) -> np.ndarray:
     """
-    The function takes a list of points and the function itself with unknown coefficients at each component,
-    and based on the least squares method, it determines approximate values of the coefficients.
-    :param given_points: list of points based on which we will perform interpolation using the least squares method
-    :param function_components: Our function in the form of a list of components
-    :return: Vector with coefficients next to every component
+    Determines the coefficients of the function using the least squares method.
+
+    :param given_points: List of points for interpolation.
+    :param function_components: Components of the function.
+    :return: Vector of coefficients corresponding to each component.
     """
     matrix_A = np.column_stack(list(map(lambda f: [f.evalf(subs={X: x_value}) for x_value in given_points[:, 0]],
                                         function_components))).astype(np.double)
@@ -39,12 +39,11 @@ def _get_coefficients_using_least_squares_method(given_points: np.ndarray, funct
 def generate_plot_with_points_approximation(points_to_approximate: np.ndarray, function_components: list,
                                             exact_coefficients: np.ndarray = None) -> None:
     """
-    The function takes a list of points and a function without coefficients.
-    Based on the least squares method, it approximates our coefficients at each component and generates plot.
-    When we give exact coefficients, our function will compare the approximations with the exact function.
-    :param points_to_approximate: points based on which we will perform interpolation using the least squares method
-    :param function_components: Components of our function
-    :param exact_coefficients: Alternative argument in which we store exact coefficients of our function
+    Generates a plot of function approximation using the least squares method.
+
+    :param points_to_approximate: Points for interpolation.
+    :param function_components: Components of the function.
+    :param exact_coefficients: Exact coefficients of the function (optional).
     """
     function_components = np.array(list(map(sympy.sympify, function_components)))
     coefficients = _get_coefficients_using_least_squares_method(points_to_approximate, function_components)
@@ -53,7 +52,7 @@ def generate_plot_with_points_approximation(points_to_approximate: np.ndarray, f
     title = "Function approximation using least squares method\n$F(x)=" + \
             "+".join([f"{chr(ord('a') + i)}*{c}" for i, c in enumerate(function_components)]) + r"$"
     if exact_coefficients is not None:
-        title += f"\nNumber of points = {NUM_POINTS}  |  Noise scale = {NOISE_SCALE}"
+        title += f"\nNumber of points = {NUM_POINTS} | Noise scale = {NOISE_SCALE}"
 
     plt.figure(figsize=(10, 7))
     plt.xlabel("x"), plt.ylabel("y")
@@ -77,7 +76,7 @@ def generate_plot_with_points_approximation(points_to_approximate: np.ndarray, f
         # plt.plot(points_to_approximate[:, 0], points_to_approximate[:, 1], 'o', color='green',
         #          label='Points with noise')
     plt.legend(loc='lower center')
-    plt.show() if sys.argv[2] == 'show' else plt.savefig(f"{sys.argv[1]}_plot.svg")
+    plt.show() if sys.argv[2] == 'show' else plt.savefig(f"generated_plots/{sys.argv[1]}_plot.svg")
 
 
 if __name__ == '__main__':
