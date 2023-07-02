@@ -1,5 +1,6 @@
 import numpy as np
 
+# Functions on which we will perform interpolation
 def function_y(x):
     return 1 / (1 + 25 * (x ** 2))
 
@@ -18,7 +19,7 @@ def inhomogeneous_interpolation_node(n):
 
 X_RANGE = np.arange(-1.0, 1.01, 0.01)
 
-FUNCTION_PARAMS = {
+FUNCTION_CONFIG = {
     'first_function': {
         'function': function_y,
         'function_title': r'$y(x)=\frac{1}{1+25x^2}$',
