@@ -1,5 +1,5 @@
 # Value of point
-POINT = 0.2
+POINT_VALUE = 0.2
 
 # Number of points in h range
 POINT_AMOUNT = 200
@@ -15,5 +15,5 @@ PRECISION = {
 }
 
 # File names
-FILE_NAME_PLOT = 'plot.png'
-FILE_NAME_TABLE = r'table_{dataType}.png'
+FILE_NAME_PLOT = 'generated_plots/plot.png'
+FILE_NAME_TABLE = 'table_{dataType}.png'
