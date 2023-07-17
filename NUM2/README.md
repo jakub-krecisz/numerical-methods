@@ -34,6 +34,13 @@ And the given vectors are:
 - Python 3.x
 - NumPy
 
+## Configuration
+
+**A1_MATRIX**: Coefficient matrix A1, as a NumPy array.
+**A2_MATRIX**: Coefficient matrix A2, as a NumPy array.
+**B_VECTOR**: Right-hand side vector B, as a NumPy array.
+**B_VECTOR_PRIM**: B_VECTOR + (10<sup>-5</sup>, 0, 0, 0, 0)<sup>T</sup>
+
 ## Usage
 
 Run the program using the command `make run`.
